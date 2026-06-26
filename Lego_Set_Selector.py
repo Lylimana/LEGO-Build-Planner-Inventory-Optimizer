@@ -54,4 +54,6 @@ search_button = tk.Button(
 )
 search_button.pack(pady = 20)
 
+window.bind("<Return>", lambda event: update_display())
+
 window.mainloop()
