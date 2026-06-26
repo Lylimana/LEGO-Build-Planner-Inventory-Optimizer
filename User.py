@@ -7,11 +7,12 @@ def create_database():
 
     db_path = os.path.join(base_folder, "Users.db")
 
-    connect = sqlite3.connect(db_path)
-
-    cursor = connect.cursor()
-
-    cursor.execute("PRAGMA foreign_keys = ON")
+    # connect = sqlite3.connect(db_path)
+    
+    with sqlite3.connect(db_path) as connect:
+        cursor = connect.cursor()
+        cursor.execute("PRAGMA foreign_keys = ON")
+        # Helps automatically close connection compared to doing it manually line 10, 39 and 40
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
@@ -35,10 +36,8 @@ def create_database():
     """
     )
 
-
-
-    connect.commit()
-    connect.close()
+    # connect.commit()
+    # connect.close()
 
 if __name__ == "__main__":
     create_database()
