@@ -1,7 +1,9 @@
 import tkinter as tk 
 import sqlite3
+import sys
+from config import users_db, sets_db
 
-connection = sqlite3.connect(r"C:\Users\manal\Desktop\Lego Build Planner & inventory Optimizer\Lego Datasets\sets.db")
+connection = sqlite3.connect(sets_db)
 
 cursor = connection.cursor()
 
@@ -36,6 +38,22 @@ def update_display():
     else: 
         set_name_label.config(text="Set not Found")
 
+def set_to_inventory(): 
+    set_num = user_set.get()
+    user_id = int(sys.argv[1])
+    
+    with sqlite3.connect(users_db) as connect: 
+        cursor = connect.cursor()
+    
+    cursor.execute("""
+        INSERT INTO owned_sets (user_id, set_number) 
+        VALUES(?,?)
+        """,
+        (user_id, set_num)               
+    )
+    
+    set_name_label.config(text="Set Added")
+
 # User Entry
 user_entered_set = tk.Entry(
     window,
@@ -46,6 +64,7 @@ user_entered_set = tk.Entry(
 )
 user_entered_set.pack(pady = 5)
 
+# Buttons
 search_button = tk.Button(
     window,
     text="Search",
@@ -53,6 +72,15 @@ search_button = tk.Button(
     command = update_display
 )
 search_button.pack(pady = 20)
+
+add_set_button = tk.Button(
+    window,
+    bd= 4,
+    text="Add set to Inventory",
+    font=("Arial", 20),
+    command= set_to_inventory
+)
+add_set_button.pack(pady = 5)
 
 window.bind("<Return>", lambda event: update_display())
 

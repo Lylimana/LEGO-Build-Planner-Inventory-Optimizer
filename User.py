@@ -1,15 +1,8 @@
 import sqlite3
-import os
-
+from config import users_db
 
 def create_database():
-    base_folder = r"C:\Users\manal\Desktop\Lego Build Planner & inventory Optimizer\Lego Datasets"
-
-    db_path = os.path.join(base_folder, "Users.db")
-
-    # connect = sqlite3.connect(db_path)
-    
-    with sqlite3.connect(db_path) as connect:
+    with sqlite3.connect(users_db) as connect:
         cursor = connect.cursor()
         cursor.execute("PRAGMA foreign_keys = ON")
         # Helps automatically close connection compared to doing it manually line 10, 39 and 40

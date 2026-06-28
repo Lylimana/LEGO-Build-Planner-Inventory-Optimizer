@@ -1,16 +1,13 @@
 import tkinter as tk 
 import sqlite3
-import os 
 import subprocess
 import sys
+from config import users_db
 
 def login_window(): 
-    base_folder = r"C:\Users\manal\Desktop\Lego Build Planner & inventory Optimizer\Lego Datasets"
-    db_path = os.path.join(base_folder, "Users.db")
-        
     def login(): 
         
-        with sqlite3.connect(db_path) as connect:
+        with sqlite3.connect(users_db) as connect:
             cursor = connect.cursor()
             
             user = user_name.get()
@@ -31,7 +28,7 @@ def login_window():
                 login_prompt.config(text="User Not Found")
         
     def signup():
-        with sqlite3.connect(db_path) as connect:
+        with sqlite3.connect(users_db) as connect:
             cursor = connect.cursor()
             
             user = user_name.get()
