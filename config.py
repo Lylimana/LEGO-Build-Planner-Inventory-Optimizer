@@ -18,3 +18,6 @@ sets_csv = datasets / "sets.csv"
 # Databases
 users_db = databases / "users.db"
 sets_db = databases / "sets.db"
+
+# Lego Selector 
+lego_selector = project_root / "Lego_Set_Selector.py"

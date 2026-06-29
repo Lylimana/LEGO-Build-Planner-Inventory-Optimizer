@@ -2,7 +2,7 @@ import tkinter as tk
 import sqlite3
 import subprocess
 import sys
-from config import users_db
+from config import users_db, lego_selector
 
 def login_window(): 
     def login(): 
@@ -22,7 +22,7 @@ def login_window():
             if result:
                 user_id = result[0]
                 username = result[1]
-                subprocess.Popen([sys.executable, "Lego_Set_Selector.py",str(user_id),username])
+                subprocess.Popen([sys.executable, str(lego_selector),str(user_id),username])
                 window.destroy()
             else: 
                 login_prompt.config(text="User Not Found")
@@ -51,7 +51,8 @@ def login_window():
                 )
                 login_prompt.config(text="User Created")
                 connect.commit()
-        
+    
+    # Window features 
     window = tk.Tk()
     window.title("Login")
     window.geometry("600x400")
