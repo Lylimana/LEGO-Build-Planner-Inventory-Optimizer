@@ -1,57 +1,7 @@
 import tkinter as tk 
-import sqlite3
-import subprocess
-import sys
-from config import users_db, lego_selector
+from login_functions import login, signup
 
-def login_window(): 
-    def login(): 
-        
-        with sqlite3.connect(users_db) as connect:
-            cursor = connect.cursor()
-            
-            user = user_name.get()
-            user_pass = user_password.get()
-            
-            cursor.execute(
-                "Select user_id, username From users Where username = ? AND password =?", (user,user_pass,)
-            )
-            
-            result = cursor.fetchone()
-            
-            if result:
-                user_id = result[0]
-                username = result[1]
-                subprocess.Popen([sys.executable, str(lego_selector),str(user_id),username])
-                window.destroy()
-            else: 
-                login_prompt.config(text="User Not Found")
-        
-    def signup():
-        with sqlite3.connect(users_db) as connect:
-            cursor = connect.cursor()
-            
-            user = user_name.get()
-            user_pass = user_password.get()
-            
-            cursor.execute(
-                "Select user_id, username From users Where username = ?", (user,)
-            )
-            
-            result = cursor.fetchone()
-            
-            if result: 
-                login_prompt.config(text="User Already Exists")
-            else: 
-                cursor.execute("""
-                    INSERT INTO users (username, password)
-                    VALUES (?,?)
-                    """,
-                    (user, user_pass)
-                )
-                login_prompt.config(text="User Created")
-                connect.commit()
-    
+def login_window():  
     # Window features 
     window = tk.Tk()
     window.title("Login")
@@ -90,7 +40,9 @@ def login_window():
         window, 
         text = "Sign up",
         font =("Arial", 20),
-        command=signup
+        command=lambda: signup(login_prompt, 
+                               user_name.get(), 
+                               user_password.get())
     )
     sign_up_button.pack(pady=5)
     
@@ -98,11 +50,17 @@ def login_window():
         window, 
         text = "Login",
         font =("Arial", 20),
-        command=login
+        command=lambda: login(window, 
+                              login_prompt, 
+                              user_name.get(), 
+                              user_password.get())
     )
     login_button.pack(pady=5)
     
-    window.bind("<Return>", lambda event: login())
+    window.bind("<Return>", lambda event: login(window, 
+                                                login_prompt, 
+                                                user_name.get(), 
+                                                user_password.get()))
 
     window.mainloop()
 
