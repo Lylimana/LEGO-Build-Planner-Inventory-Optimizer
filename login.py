@@ -85,6 +85,7 @@ def login_window():
     )
     user_password_entry.pack(pady=5)
     
+    # Buttons 
     sign_up_button = tk.Button(
         window, 
         text = "Sign up",
@@ -100,6 +101,8 @@ def login_window():
         command=login
     )
     login_button.pack(pady=5)
+    
+    window.bind("<Return>", lambda event: login())
 
     window.mainloop()
 
