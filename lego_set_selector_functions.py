@@ -11,29 +11,46 @@ def get_sets_connection():
 
 
 def update_display(set_name_label, user_set): 
-    connection = get_sets_connection()
-
-    cursor = connection.cursor()
+    set_num = user_set.get().strip()
     
-    set_num = user_set.get()
+    if not set_num: 
+        set_name_label.config(text = "Enter a set number")
     
-    cursor.execute(
-        "SELECT name FROM sets WHERE set_num = ?", (set_num,)   
-    )
+    with get_sets_connection() as connect: 
+        cursor = connect.cursor()
+    
+        cursor.execute(
+            "SELECT name FROM sets WHERE set_num = ?", (set_num,)   
+        )
 
-    result = cursor.fetchone()
+        result = cursor.fetchone()
     
     if result: 
         set_name_label.config(text=result[0])
     else: 
         set_name_label.config(text="Set not Found")
     
-    connection.close()
-
 # Button functions
 def set_to_inventory(set_name_label, user_set, user_id): 
-    set_num = user_set.get()
+    set_num = user_set.get().strip()
     
+    if not set_num: 
+        set_name_label.config(text = "Enter a set number")
+        return
+    
+    with get_sets_connection() as connect: 
+        cursor = connect.cursor()
+        
+        cursor.execute(
+            "SELECT name From sets WHERE set_num = ?", (set_num,)
+        )
+        
+        set_exists = cursor.fetchone()
+        
+        if set_exists is None: 
+            set_name_label.config(text = "Set does not exist")
+            return 
+        
     with get_users_connection() as connect: 
         cursor = connect.cursor()
     
@@ -44,9 +61,9 @@ def set_to_inventory(set_name_label, user_set, user_id):
             (user_id, set_num)               
         )
         
-        result = cursor.fetchone()
+        owned_set = cursor.fetchone()
         
-        if result: 
+        if owned_set: 
             cursor.execute("""
                 UPDATE owned_sets
                 SET quantity = quantity + 1
