@@ -8,21 +8,22 @@ def login(window, login_prompt, username, password):
         cursor = connect.cursor()
         
         user = username
-        user_pass = password
         
         cursor.execute(
-            "Select user_id, username From users Where username = ? AND password =?", (user,user_pass,)
+            "Select user_id, username, password From users Where username = ?", (user,)
         )
         
         result = cursor.fetchone()
         
-        if result:
+        if result is None:
+            login_prompt.config(text="User Not Found")
+        elif result[2] != password: 
+            login_prompt.config(text="Password is incorrect")
+        else:
             user_id = result[0]
             username = result[1]
             subprocess.Popen([sys.executable, str(lego_selector),str(user_id),username])
             window.destroy()
-        else: 
-            login_prompt.config(text="User Not Found")
 
 def signup(login_prompt, username, password):
     with sqlite3.connect(users_db) as connect:
