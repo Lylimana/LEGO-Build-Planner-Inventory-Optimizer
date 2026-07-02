@@ -124,5 +124,19 @@ def open_inventory(set_name_label, user_id):
                 text= quantity,
                 font=("Arial", 10)
             ).grid(row=i, column=1)
+            
+            # Remove set
+            tk.Button(
+                inventory_window,
+                text="Remove set",
+                font=("Arial", 10)
+            ).grid(row=i, column=2)
+            
+            # Add set
+            tk.Button(
+                inventory_window,
+                text="Add set",
+                font=("Arial", 10)
+            ).grid(row=i, column=3)
     else:
         set_name_label.config(text = "You have no Sets")
